@@ -1,0 +1,487 @@
+// Better Drive — sqlite schema.
+//
+// GENERATED FILE. Do not edit directly.
+// Edit prisma/mysql/schema.prisma and run `npm run schema:sync`.
+//
+// SQLite — the default provider. Needs no DATABASE_URL and no database server.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                      String                   @id @default(uuid())
+  name                    String
+  email                   String                   @unique
+  passwordHash            String                   @map("password_hash")
+  role                    String                   @default("member")
+  status                  String                   @default("active")
+  gravatarEnabled         Boolean                  @default(false) @map("gravatar_enabled")
+  createdAt               DateTime                 @default(now()) @map("created_at")
+  updatedAt               DateTime                 @updatedAt @map("updated_at")
+  sessions                UserSession[]
+  authHandoffs            AuthHandoff[]
+  providerConfigs         ProviderConfig[]
+  oauthStates             OauthState[]
+  connectedAccounts       ConnectedAccount[]
+  s3StorageConfigs        S3StorageConfig[]
+  files                   File[]
+  fileShares              FileShare[]
+  filePreviewTokens       FilePreviewToken[]
+  folders                 Folder[]
+  uploadSessions          UploadSession[]
+  auditLogs               AuditLog[]
+  savedViews              SavedView[]
+  workspaceInvitesSent    WorkspaceInvite[]        @relation("WorkspaceInvitesSent")
+  uploadRoutingPolicy     UploadRoutingPolicy?
+  apiKeys                 ApiKey[]
+  sftpProfiles            SftpAccessProfile[]
+  invitations             Invitation[]
+  notificationPreferences NotificationPreference[]
+
+  @@index([role])
+  @@map("users")
+}
+
+model ApiKey {
+  id         String    @id @default(uuid())
+  userId     String    @map("user_id")
+  name       String
+  label      String?
+  keyPrefix  String    @map("key_prefix")
+  keyHash    String    @unique @map("key_hash")
+  scopes     String
+  status     String    @default("active")
+  lastUsedAt DateTime? @map("last_used_at")
+  expiresAt  DateTime? @map("expires_at")
+  revokedAt  DateTime? @map("revoked_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, status, createdAt])
+  @@map("api_keys")
+}
+
+model UploadRoutingPolicy {
+  id                 String   @id @default(uuid())
+  userId             String   @unique @map("user_id")
+  mode               String   @default("most_available")
+  priorityAccountIds String   @map("priority_account_ids")
+  roundRobinCursor   Int      @default(0) @map("round_robin_cursor")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("upload_routing_policies")
+}
+
+model UserSession {
+  id               String    @id @default(uuid())
+  userId           String    @map("user_id")
+  refreshTokenHash String    @map("refresh_token_hash")
+  userAgent        String?   @map("user_agent")
+  ipAddress        String?   @map("ip_address")
+  expiresAt        DateTime  @map("expires_at")
+  revokedAt        DateTime? @map("revoked_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([refreshTokenHash])
+  @@map("user_sessions")
+}
+
+model AuthHandoff {
+  id        String    @id @default(uuid())
+  userId    String    @map("user_id")
+  tokenHash String    @unique @map("token_hash")
+  expiresAt DateTime  @map("expires_at")
+  usedAt    DateTime? @map("used_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("auth_handoffs")
+}
+
+model ProviderConfig {
+  id                    String             @id @default(uuid())
+  userId                String?            @map("user_id")
+  provider              String
+  clientIdEncrypted     String             @map("client_id_encrypted")
+  clientSecretEncrypted String             @map("client_secret_encrypted")
+  redirectUri           String             @map("redirect_uri")
+  scopes                String
+  status                String             @default("active")
+  createdAt             DateTime           @default(now()) @map("created_at")
+  updatedAt             DateTime           @updatedAt @map("updated_at")
+  user                  User?              @relation(fields: [userId], references: [id], onDelete: SetNull)
+  oauthStates           OauthState[]
+  connectedAccounts     ConnectedAccount[]
+
+  @@index([userId])
+  @@index([provider])
+  @@map("provider_configs")
+}
+
+model OauthState {
+  id               String         @id @default(uuid())
+  userId           String?        @map("user_id")
+  providerConfigId String         @map("provider_config_id")
+  flow             String         @default("connect")
+  stateHash        String         @unique @map("state_hash")
+  expiresAt        DateTime       @map("expires_at")
+  usedAt           DateTime?      @map("used_at")
+  createdAt        DateTime       @default(now()) @map("created_at")
+  user             User?          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  providerConfig   ProviderConfig @relation(fields: [providerConfigId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("oauth_states")
+}
+
+model ConnectedAccount {
+  id                    String           @id @default(uuid())
+  userId                String           @map("user_id")
+  providerConfigId      String?          @map("provider_config_id")
+  provider              String
+  providerAccountId     String           @map("provider_account_id")
+  email                 String
+  displayName           String?          @map("display_name")
+  avatarUrl             String?          @map("avatar_url")
+  accessTokenEncrypted  String?          @map("access_token_encrypted")
+  refreshTokenEncrypted String?          @map("refresh_token_encrypted")
+  tokenExpiresAt        DateTime?        @map("token_expires_at")
+  scopes                String
+  status                String           @default("connected")
+  enabled               Boolean          @default(true)
+  revokedAt             DateTime?        @map("revoked_at")
+  lastError             String?          @map("last_error")
+  createdAt             DateTime         @default(now()) @map("created_at")
+  updatedAt             DateTime         @updatedAt @map("updated_at")
+  user                  User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  providerConfig        ProviderConfig?  @relation(fields: [providerConfigId], references: [id], onDelete: Cascade)
+  storageAccount        StorageAccount?
+  files                 File[]
+  folders               Folder[]
+  uploadSessions        UploadSession[]
+  s3StorageConfig       S3StorageConfig?
+
+  @@unique([userId, provider, providerAccountId])
+  @@index([userId])
+  @@index([userId, status, createdAt])
+  @@map("connected_accounts")
+}
+
+model S3StorageConfig {
+  id                       String           @id @default(uuid())
+  userId                   String           @map("user_id")
+  connectedAccountId       String           @unique @map("connected_account_id")
+  name                     String
+  bucket                   String
+  region                   String
+  endpoint                 String?
+  accessKeyIdEncrypted     String           @map("access_key_id_encrypted")
+  secretAccessKeyEncrypted String           @map("secret_access_key_encrypted")
+  forcePathStyle           Boolean          @default(false) @map("force_path_style")
+  prefix                   String           @default("better-drive")
+  quotaBytes               BigInt?          @map("quota_bytes")
+  status                   String           @default("active")
+  createdAt                DateTime         @default(now()) @map("created_at")
+  updatedAt                DateTime         @updatedAt @map("updated_at")
+  user                     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  connectedAccount         ConnectedAccount @relation(fields: [connectedAccountId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, status])
+  @@map("s3_storage_configs")
+}
+
+model StorageAccount {
+  id                 String           @id @default(uuid())
+  connectedAccountId String           @unique @map("connected_account_id")
+  totalBytes         BigInt?          @map("total_bytes")
+  usedBytes          BigInt           @default(0) @map("used_bytes")
+  availableBytes     BigInt?          @map("available_bytes")
+  trashBytes         BigInt?          @map("trash_bytes")
+  lastSyncedAt       DateTime?        @map("last_synced_at")
+  createdAt          DateTime         @default(now()) @map("created_at")
+  updatedAt          DateTime         @updatedAt @map("updated_at")
+  connectedAccount   ConnectedAccount @relation(fields: [connectedAccountId], references: [id], onDelete: Cascade)
+
+  @@map("storage_accounts")
+}
+
+model File {
+  id                 String             @id @default(uuid())
+  userId             String             @map("user_id")
+  connectedAccountId String             @map("connected_account_id")
+  folderId           String?            @map("folder_id")
+  provider           String
+  providerFileId     String             @map("provider_file_id")
+  name               String
+  mimeType           String             @map("mime_type")
+  sizeBytes          BigInt             @map("size_bytes")
+  checksum           String?
+  starred            Boolean            @default(false)
+  starredAt          DateTime?          @map("starred_at")
+  lastViewedAt       DateTime?          @map("last_viewed_at")
+  status             String             @default("active")
+  createdAt          DateTime           @default(now()) @map("created_at")
+  updatedAt          DateTime           @updatedAt @map("updated_at")
+  deletedAt          DateTime?          @map("deleted_at")
+  user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  connectedAccount   ConnectedAccount   @relation(fields: [connectedAccountId], references: [id], onDelete: Cascade)
+  folder             Folder?            @relation(fields: [folderId], references: [id], onDelete: SetNull)
+  shares             FileShare[]
+  previewTokens      FilePreviewToken[]
+
+  @@index([userId])
+  @@index([userId, status, createdAt])
+  @@index([userId, status, folderId, createdAt])
+  @@index([userId, status, starred, starredAt])
+  @@index([userId, status, updatedAt])
+  @@index([userId, checksum])
+  @@index([connectedAccountId])
+  @@index([folderId])
+  @@index([providerFileId])
+  @@map("files")
+}
+
+model FileShare {
+  id             String    @id @default(uuid())
+  fileId         String    @map("file_id")
+  userId         String    @map("user_id")
+  tokenEncrypted String?   @map("token_encrypted")
+  tokenHash      String    @unique @map("token_hash")
+  passwordHash   String?   @map("password_hash")
+  enabled        Boolean   @default(true)
+  downloadCount  Int       @default(0) @map("download_count")
+  lastAccessedAt DateTime? @map("last_accessed_at")
+  expiresAt      DateTime? @map("expires_at")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+  file           File      @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([fileId])
+  @@index([userId])
+  @@index([userId, enabled, createdAt])
+  @@index([fileId, userId, enabled, createdAt])
+  @@map("file_shares")
+}
+
+model FilePreviewToken {
+  id        String   @id @default(uuid())
+  fileId    String   @map("file_id")
+  userId    String   @map("user_id")
+  tokenHash String   @unique @map("token_hash")
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  file      File     @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([fileId])
+  @@index([userId])
+  @@map("file_preview_tokens")
+}
+
+model Folder {
+  id                 String            @id @default(uuid())
+  userId             String            @map("user_id")
+  parentId           String?           @map("parent_id")
+  connectedAccountId String?           @map("connected_account_id")
+  provider           String            @default("google_drive")
+  providerFolderId   String?           @map("provider_folder_id")
+  name               String
+  color              String            @default("blue")
+  iconUrl            String?           @map("icon_url")
+  createdAt          DateTime          @default(now()) @map("created_at")
+  updatedAt          DateTime          @updatedAt @map("updated_at")
+  deletedAt          DateTime?         @map("deleted_at")
+  user               User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parent             Folder?           @relation("FolderChildren", fields: [parentId], references: [id], onDelete: SetNull)
+  children           Folder[]          @relation("FolderChildren")
+  connectedAccount   ConnectedAccount? @relation(fields: [connectedAccountId], references: [id], onDelete: SetNull)
+  files              File[]
+  uploadSessions     UploadSession[]   @relation("UploadSessionFolder")
+
+  @@index([userId])
+  @@index([userId, deletedAt, updatedAt])
+  @@index([userId, deletedAt, parentId, updatedAt])
+  @@index([parentId])
+  @@index([connectedAccountId])
+  @@map("folders")
+}
+
+model SavedView {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  name      String
+  query     String
+  icon      String?
+  pinned    Boolean  @default(true)
+  sortOrder Int      @default(0) @map("sort_order")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, name])
+  @@index([userId, pinned, sortOrder])
+  @@map("saved_views")
+}
+
+model UploadSession {
+  id                       String            @id @default(uuid())
+  userId                   String            @map("user_id")
+  targetConnectedAccountId String?           @map("target_connected_account_id")
+  folderId                 String?           @map("folder_id")
+  fileName                 String            @map("file_name")
+  mimeType                 String            @map("mime_type")
+  sizeBytes                BigInt            @map("size_bytes")
+  status                   String
+  googleSessionUri         String?           @map("google_session_uri")
+  errorMessage             String?           @map("error_message")
+  createdAt                DateTime          @default(now()) @map("created_at")
+  completedAt              DateTime?         @map("completed_at")
+  user                     User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  targetConnectedAccount   ConnectedAccount? @relation(fields: [targetConnectedAccountId], references: [id], onDelete: SetNull)
+  folder                   Folder?           @relation("UploadSessionFolder", fields: [folderId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([folderId])
+  @@map("upload_sessions")
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  userId     String?  @map("user_id")
+  action     String
+  entityType String   @map("entity_type")
+  entityId   String?  @map("entity_id")
+  metadata   String?
+  ipAddress  String?  @map("ip_address")
+  createdAt  DateTime @default(now()) @map("created_at")
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([userId, createdAt])
+  @@index([action])
+  @@map("audit_logs")
+}
+
+model WorkspaceInvite {
+  id           String    @id @default(uuid())
+  inviterId    String    @map("inviter_id")
+  inviteeEmail String    @map("invitee_email")
+  targetType   String    @default("file") @map("target_type")
+  targetId     String    @default("") @map("target_id")
+  role         String    @default("viewer")
+  status       String    @default("pending")
+  revokedAt    DateTime? @map("revoked_at")
+  acceptedAt   DateTime? @map("accepted_at")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+  inviter      User      @relation("WorkspaceInvitesSent", fields: [inviterId], references: [id], onDelete: Cascade)
+
+  @@unique([inviterId, inviteeEmail, targetType, targetId], map: "workspace_invites_target_unique")
+  @@index([inviteeEmail])
+  @@index([targetType, targetId])
+  @@map("workspace_invites")
+}
+
+model SftpAccessProfile {
+  id             String              @id @default(uuid())
+  userId         String              @map("user_id")
+  label          String
+  allowRead      Boolean             @default(true) @map("allow_read")
+  allowWrite     Boolean             @default(false) @map("allow_write")
+  allowDelete    Boolean             @default(false) @map("allow_delete")
+  allowedRoots   String              @map("allowed_roots")
+  maxUploadBytes BigInt?             @map("max_upload_bytes")
+  ipAllowlist    String?             @map("ip_allowlist")
+  enabled        Boolean             @default(true)
+  createdAt      DateTime            @default(now()) @map("created_at")
+  updatedAt      DateTime            @updatedAt @map("updated_at")
+  user           User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  keys           SftpAuthorizedKey[]
+
+  @@index([userId])
+  @@index([userId, enabled])
+  @@map("sftp_access_profiles")
+}
+
+model SftpAuthorizedKey {
+  id          String            @id @default(uuid())
+  profileId   String            @map("profile_id")
+  label       String
+  publicKey   String            @map("public_key")
+  fingerprint String            @unique
+  lastUsedAt  DateTime?         @map("last_used_at")
+  revokedAt   DateTime?         @map("revoked_at")
+  createdAt   DateTime          @default(now()) @map("created_at")
+  profile     SftpAccessProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  sessions    SftpSessionLog[]
+
+  @@index([profileId])
+  @@index([fingerprint])
+  @@map("sftp_authorized_keys")
+}
+
+model SftpSessionLog {
+  id        String             @id @default(uuid())
+  keyId     String?            @map("key_id")
+  userId    String?            @map("user_id")
+  remoteIp  String             @map("remote_ip")
+  event     String
+  path      String?
+  bytes     BigInt?
+  outcome   String
+  createdAt DateTime           @default(now()) @map("created_at")
+  key       SftpAuthorizedKey? @relation(fields: [keyId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([keyId])
+  @@index([userId])
+  @@map("sftp_session_logs")
+}
+
+model Invitation {
+  id          String    @id @default(uuid())
+  email       String
+  role        String
+  tokenHash   String    @unique @map("token_hash")
+  invitedById String    @map("invited_by_id")
+  expiresAt   DateTime  @map("expires_at")
+  acceptedAt  DateTime? @map("accepted_at")
+  revokedAt   DateTime? @map("revoked_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  invitedBy   User      @relation(fields: [invitedById], references: [id], onDelete: Cascade)
+
+  @@index([email])
+  @@index([invitedById])
+  @@map("invitations")
+}
+
+model NotificationPreference {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  eventType String   @map("event_type")
+  channel   String   @default("in_app")
+  enabled   Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, eventType, channel])
+  @@index([userId])
+  @@map("notification_preferences")
+}

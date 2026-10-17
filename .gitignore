@@ -1,0 +1,65 @@
+# Dependencies & Auto-generated Lockfiles
+node_modules/
+.pnp
+.pnp.js
+package-lock.json
+npm-shrinkwrap.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build and test output
+dist/
+build/
+coverage/
+test-results/
+playwright-report/
+*.tsbuildinfo
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Local database and runtime data (SQLite is the default provider)
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+backend/prisma/*.db*
+data/
+backend/data/
+**/sftp_host_*
+!**/sftp_host_*.pub.example
+*.key
+*.pem
+*.cert
+
+# Generated Prisma client
+backend/node_modules/.prisma/
+backend/generated/
+
+# Logs and temp files
+*.log
+npm-debug.log*
+logs/
+tmp/
+*.bak
+*.orig
+
+# Editor and OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Caches
+.cache/
+.eslintcache
+.vite/
+
+# Local raw asset drafts (published assets live in docs/assets/)
+/assets/

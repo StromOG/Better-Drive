@@ -1,0 +1,62 @@
+{
+  "name": "@better-drive/backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Better Drive API: auth, storage providers, files, folders, sharing and uploads.",
+  "license": "Apache-2.0",
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "start": "node dist/server.js",
+    "start:deploy": "npm run db:deploy && node dist/server.js",
+    "db:generate": "node scripts/prisma.mjs generate",
+    "db:migrate": "node scripts/prisma.mjs migrate dev",
+    "db:deploy": "node scripts/prisma.mjs migrate deploy",
+    "db:reset": "node scripts/prisma.mjs migrate reset",
+    "db:studio": "node scripts/prisma.mjs studio",
+    "seed:google-config": "tsx src/scripts/seed-google-config.ts",
+    "seed:google-config:optional": "tsx src/scripts/seed-google-config-if-present.ts",
+    "test:s3": "tsx src/scripts/test-s3-connection.ts",
+    "test:api-upload": "tsx src/scripts/test-api-upload.ts",
+    "test:sftp": "tsx --test tests/sftp/sftp.spec.ts",
+    "test:backend": "tsx --test \"tests/**/*.spec.ts\"",
+    "postinstall": "node scripts/prisma.mjs generate"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.954.0",
+    "@aws-sdk/lib-storage": "^3.954.0",
+    "@prisma/client": "^6.19.3",
+    "@types/ssh2": "^1.15.6",
+    "archiver": "^8.0.0",
+    "argon2": "^0.44.0",
+    "busboy": "^1.6.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.7.1",
+    "googleapis": "^173.0.0",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "prisma": "^6.19.3",
+    "ssh2": "^1.17.0",
+    "undici": "^7.27.1",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/archiver": "^8.0.0",
+    "@types/busboy": "^1.5.4",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^25.9.1",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3"
+  },
+  "optionalDependencies": {
+    "@esbuild/win32-x64": "^0.28.2"
+  }
+}

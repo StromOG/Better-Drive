@@ -1,0 +1,26 @@
+services:
+  betterdrive:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: betterdrive:latest
+    container_name: betterdrive
+    restart: unless-stopped
+    ports:
+      - "4000:4000"     # Web Dashboard & Backend API
+      - "2222:2222"     # Embedded SFTP Gateway
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      APP_URL: ${APP_URL:-http://localhost:4000}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:4000}
+      DATABASE_URL: ${DATABASE_URL:-file:/app/data/betterdrive.db}
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-change-this-jwt-secret-min-32-chars-strictly}
+      TOKEN_ENCRYPTION_KEY: ${TOKEN_ENCRYPTION_KEY:-change-this-token-encryption-32-bytes!}
+      SFTP_ENABLED: ${SFTP_ENABLED:-true}
+      SFTP_PORT: 2222
+    volumes:
+      - betterdrive_data:/app/data
+
+volumes:
+  betterdrive_data:

@@ -1,0 +1,48 @@
+{
+  "name": "better-drive",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Self-hosted storage gateway that unifies multiple Google Drive accounts and S3-compatible buckets behind one dashboard.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "predev": "node scripts/ensure-env.mjs",
+    "dev": "node --no-deprecation scripts/dev.mjs",
+    "dev:api": "npm run dev --workspace backend",
+    "dev:web": "npm run dev --workspace frontend",
+    "build": "npm run build --workspace backend && npm run build --workspace frontend",
+    "start": "npm run start --workspace backend",
+    "typecheck": "npm run typecheck --workspace backend && npm run typecheck --workspace frontend",
+    "lint": "npm run typecheck",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "setup": "node scripts/ensure-env.mjs && npm run db:deploy",
+    "db:migrate": "npm run db:migrate --workspace backend",
+    "db:deploy": "npm run db:deploy --workspace backend",
+    "db:studio": "npm run db:studio --workspace backend",
+    "db:generate": "npm run db:generate --workspace backend",
+    "schema:sync": "node scripts/sync-schemas.mjs",
+    "schema:check": "node scripts/sync-schemas.mjs --check",
+    "test:backend": "npm run test:backend --workspace backend",
+    "test:frontend": "npm run test --workspace frontend",
+    "test:sftp": "npm run test:sftp --workspace backend",
+    "verify": "npm run schema:check && npm run lint && npm run typecheck && npm run test:backend && npm run test:frontend && npm run test:sftp && npm run build"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "concurrently": "^10.0.6",
+    "eslint": "^10.12.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.13.0",
+    "playwright": "^1.64.1",
+    "prettier": "^3.9.10",
+    "typescript-eslint": "^8.71.2"
+  }
+}

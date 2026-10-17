@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="icon" href="/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/pwa-192x192.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#2563eb" />
+    <meta name="description" content="Better Drive - Unified multi-cloud and S3 storage gateway for files, folders, and quota management." />
+    <title>Better Drive</title>
+    <script>
+      (function() {
+        try {
+          const saved = localStorage.getItem('betterdrive:theme') || 'arctic-pure';
+          document.documentElement.setAttribute('data-theme', saved);
+          const isDark = saved === 'dark' || saved.includes('midnight') || saved.includes('cyber') || saved.includes('sunset') || saved.includes('forest');
+          if (isDark) {
+            document.documentElement.classList.add('dark');
+            document.documentElement.classList.remove('light');
+          } else {
+            document.documentElement.classList.add('light');
+            document.documentElement.classList.remove('dark');
+          }
+        } catch (_) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root">
+      <div style="min-height: 100vh; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--app-bg, #0b132b); font-family: 'Manrope', system-ui, sans-serif; user-select: none;">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 14px;">
+          <img src="/logo.png" alt="Better Drive" style="width: 48px; height: 48px; object-fit: contain;" />
+          <div style="font-weight: 700; font-size: 18px; letter-spacing: -0.02em; color: var(--app-text, #f8fafc);">Better Drive</div>
+          <div style="width: 120px; height: 3px; border-radius: 9999px; background: rgba(148, 163, 184, 0.2); overflow: hidden; position: relative;">
+            <div style="position: absolute; inset: 0; width: 50%; border-radius: 9999px; background: #2563eb; animation: shimmer 1.5s infinite ease-in-out;"></div>
+          </div>
+        </div>
+      </div>
+      <style>@keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(200%); } }</style>
+    </div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

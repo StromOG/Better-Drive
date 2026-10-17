@@ -1,0 +1,375 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ==========================================================================
+   BETTER DRIVE ADVANCED THEME ENGINE
+   8 Curated Themes: 4 Light Themes (Default: Cotton Pastel) & 4 Dark Themes
+   ========================================================================== */
+
+:root {
+  --app-bg-gradient: radial-gradient(ellipse at 15% 10%, rgba(254, 215, 170, 0.55) 0%, transparent 50%),
+                     radial-gradient(ellipse at 85% 15%, rgba(251, 207, 232, 0.6) 0%, transparent 45%),
+                     radial-gradient(ellipse at 50% 90%, rgba(254, 243, 199, 0.5) 0%, transparent 50%),
+                     linear-gradient(180deg, #fdf8f4 0%, #f6ece3 100%);
+  --app-bg: #fdf8f4;
+  --app-text: #261e1b;
+  --app-text-muted: #84736b;
+  --card-bg: #ffffff;
+  --card-border: #f0dfd5;
+  --card-shadow: 0 4px 20px -2px rgba(236, 72, 153, 0.1), 0 1px 3px rgba(0, 0, 0, 0.04);
+  --sidebar-bg: #faf3eb;
+  --sidebar-border: #ebdcd0;
+  --input-bg: #ffffff;
+  --input-border: #e8d7cd;
+  --accent: #ec4899;
+  --accent-hover: #db2777;
+  --ring-focus: rgba(236, 72, 153, 0.28);
+}
+
+/* 1. Pastel (Default Light) - Soft warm cream & rose accents */
+:root[data-theme="cotton-pastel"],
+[data-theme="cotton-pastel"] {
+  --app-bg-gradient: radial-gradient(ellipse at 15% 10%, rgba(254, 215, 170, 0.55) 0%, transparent 50%),
+                     radial-gradient(ellipse at 85% 15%, rgba(251, 207, 232, 0.6) 0%, transparent 45%),
+                     radial-gradient(ellipse at 50% 90%, rgba(254, 243, 199, 0.5) 0%, transparent 50%),
+                     linear-gradient(180deg, #fdf8f4 0%, #f6ece3 100%);
+  --app-bg: #fdf8f4;
+  --app-text: #261e1b;
+  --app-text-muted: #84736b;
+  --card-bg: #ffffff;
+  --card-border: #f0dfd5;
+  --card-shadow: 0 4px 20px -2px rgba(236, 72, 153, 0.1), 0 1px 3px rgba(0, 0, 0, 0.04);
+  --sidebar-bg: #faf3eb;
+  --sidebar-border: #ebdcd0;
+  --input-bg: #ffffff;
+  --input-border: #e8d7cd;
+  --accent: #ec4899;
+  --accent-hover: #db2777;
+  --ring-focus: rgba(236, 72, 153, 0.28);
+}
+
+/* 2. Arctic (Light) - Icy Glacier Blue canvas with cool steel-blue borders and electric cobalt */
+:root[data-theme="arctic-pure"],
+[data-theme="arctic-pure"] {
+  --app-bg-gradient: radial-gradient(ellipse at 20% 15%, rgba(186, 230, 253, 0.75) 0%, transparent 50%),
+                     radial-gradient(ellipse at 80% 80%, rgba(147, 197, 253, 0.55) 0%, transparent 50%),
+                     linear-gradient(180deg, #e8f2ff 0%, #d9e8fc 100%);
+  --app-bg: #e8f2ff;
+  --app-text: #0b1e36;
+  --app-text-muted: #3b5b82;
+  --card-bg: #f4f8fe;
+  --card-border: #93c5fd;
+  --card-shadow: 0 4px 18px -2px rgba(37, 99, 235, 0.18), 0 1px 3px rgba(11, 30, 54, 0.06);
+  --sidebar-bg: #dcebfa;
+  --sidebar-border: #a7ccf2;
+  --input-bg: #ffffff;
+  --input-border: #93c5fd;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --ring-focus: rgba(37, 99, 235, 0.35);
+}
+
+/* 3. Rose (Light) - Visibly Pink Strawberry Blush canvas with cherry blossom borders and crimson */
+:root[data-theme="rose-quartz"],
+[data-theme="rose-quartz"] {
+  --app-bg-gradient: radial-gradient(ellipse at 15% 15%, rgba(251, 113, 133, 0.45) 0%, transparent 50%),
+                     radial-gradient(ellipse at 85% 85%, rgba(244, 63, 94, 0.35) 0%, transparent 50%),
+                     linear-gradient(180deg, #fdf2f4 0%, #fce7ec 100%);
+  --app-bg: #fdf2f4;
+  --app-text: #4c0519;
+  --app-text-muted: #9f1239;
+  --card-bg: #fff5f7;
+  --card-border: #f472b6;
+  --card-shadow: 0 4px 22px rgba(225, 29, 72, 0.18);
+  --sidebar-bg: #fde2e8;
+  --sidebar-border: #f9a8d4;
+  --input-bg: #ffffff;
+  --input-border: #fb7185;
+  --accent: #e11d48;
+  --accent-hover: #be123c;
+  --ring-focus: rgba(225, 29, 72, 0.35);
+}
+
+/* 4. Mint (Light) - Visibly Fresh Spring Sage canvas with jade borders and botanical emerald */
+:root[data-theme="emerald-mist"],
+[data-theme="emerald-mist"] {
+  --app-bg-gradient: radial-gradient(ellipse at 15% 15%, rgba(52, 211, 153, 0.5) 0%, transparent 50%),
+                     radial-gradient(ellipse at 85% 85%, rgba(16, 185, 129, 0.4) 0%, transparent 50%),
+                     linear-gradient(180deg, #e8f7ee 0%, #d8f3e3 100%);
+  --app-bg: #e8f7ee;
+  --app-text: #022c22;
+  --app-text-muted: #065f46;
+  --card-bg: #f2faf5;
+  --card-border: #86efac;
+  --card-shadow: 0 4px 22px rgba(5, 150, 105, 0.18);
+  --sidebar-bg: #d2f1df;
+  --sidebar-border: #6ee7b7;
+  --input-bg: #ffffff;
+  --input-border: #4ade80;
+  --accent: #059669;
+  --accent-hover: #047857;
+  --ring-focus: rgba(5, 150, 105, 0.35);
+}
+
+/* 5. Midnight (Dark) - Deep Oceanic Sapphire Blue canvas with luminous indigo borders and violet */
+:root[data-theme="midnight-nebula"],
+[data-theme="midnight-nebula"] {
+  --app-bg-gradient: radial-gradient(ellipse at 20% 15%, rgba(99, 102, 241, 0.4) 0%, transparent 50%),
+                     radial-gradient(ellipse at 85% 85%, rgba(168, 85, 247, 0.35) 0%, transparent 50%),
+                     linear-gradient(180deg, #081028 0%, #040816 100%);
+  --app-bg: #071126;
+  --app-text: #f8fafc;
+  --app-text-muted: #94a3b8;
+  --card-bg: #111d38;
+  --card-border: #2d4a7e;
+  --card-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+  --sidebar-bg: #0c162e;
+  --sidebar-border: #1f3458;
+  --input-bg: #0e1b36;
+  --input-border: #314878;
+  --accent: #818cf8;
+  --accent-hover: #6366f1;
+  --ring-focus: rgba(129, 140, 248, 0.45);
+}
+
+/* 6. OLED Black (Dark) - 100% Pure Pitch Black canvas with sharp zinc borders and electric cyan */
+:root[data-theme="cyber-obsidian"],
+[data-theme="cyber-obsidian"] {
+  --app-bg-gradient: linear-gradient(180deg, #000000 0%, #050507 100%);
+  --app-bg: #000000;
+  --app-text: #ffffff;
+  --app-text-muted: #a1a1aa;
+  --card-bg: #0c0c0e;
+  --card-border: #27272e;
+  --card-shadow: 0 4px 28px rgba(0, 0, 0, 0.98);
+  --sidebar-bg: #070709;
+  --sidebar-border: #1e1e24;
+  --input-bg: #0c0c0e;
+  --input-border: #33333a;
+  --accent: #00f5ff;
+  --accent-hover: #06b6d4;
+  --ring-focus: rgba(0, 245, 255, 0.45);
+}
+
+/* 7. Plum (Dark) - Deep Royal Wine/Aubergine canvas with violet borders and sunset coral */
+:root[data-theme="sunset-velvet"],
+[data-theme="sunset-velvet"] {
+  --app-bg-gradient: radial-gradient(ellipse at 20% 20%, rgba(244, 63, 94, 0.38) 0%, transparent 50%),
+                     radial-gradient(ellipse at 80% 80%, rgba(245, 158, 11, 0.28) 0%, transparent 50%),
+                     linear-gradient(180deg, #220d30 0%, #12051b 100%);
+  --app-bg: #220d30;
+  --app-text: #fae8ff;
+  --app-text-muted: #d8b4fe;
+  --card-bg: #331349;
+  --card-border: #7e22ce;
+  --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.75);
+  --sidebar-bg: #290e3d;
+  --sidebar-border: #5c1c85;
+  --input-bg: #2a0f3d;
+  --input-border: #7e22ce;
+  --accent: #f43f5e;
+  --accent-hover: #e11d48;
+  --ring-focus: rgba(244, 63, 94, 0.45);
+}
+
+/* 8. Forest (Dark) - Deep Twilight Evergreen Pine canvas with moss borders and bioluminescent emerald */
+:root[data-theme="deep-forest"],
+[data-theme="deep-forest"] {
+  --app-bg-gradient: radial-gradient(ellipse at 20% 20%, rgba(16, 185, 129, 0.38) 0%, transparent 50%),
+                     radial-gradient(ellipse at 80% 80%, rgba(20, 184, 166, 0.28) 0%, transparent 50%),
+                     linear-gradient(180deg, #051d14 0%, #020f0a 100%);
+  --app-bg: #051d14;
+  --app-text: #ecfdf5;
+  --app-text-muted: #6ee7b7;
+  --card-bg: #0c3222;
+  --card-border: #15803d;
+  --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.75);
+  --sidebar-bg: #082419;
+  --sidebar-border: #144e32;
+  --input-bg: #0a291a;
+  --input-border: #15803d;
+  --accent: #10b981;
+  --accent-hover: #059669;
+  --ring-focus: rgba(16, 185, 129, 0.45);
+}
+
+/* ==========================================================================
+   GLOBAL BASE STYLING
+   ========================================================================== */
+.app-canvas {
+  background-color: var(--app-bg);
+  background-image: var(--app-bg-gradient);
+  background-attachment: fixed;
+}
+
+html, body {
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: var(--app-text);
+  background-color: var(--app-bg);
+  background-image: var(--app-bg-gradient);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Ensure headings always have confident, bold typography and crisp contrast */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--app-text);
+}
+
+/* Custom subtle scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Prevent horizontal scrollbars on modals and dialog containers */
+[role="dialog"] {
+  overflow-x: hidden !important;
+}
+
+[role="dialog"]::-webkit-scrollbar:horizontal,
+[role="dialog"] *:not(pre):not(code)::-webkit-scrollbar:horizontal {
+  display: none !important;
+  height: 0px !important;
+}
+
+/* Smooth transitions for theme toggle */
+body, aside, main, header, div.border {
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+/* Global button and interactive element cursor rules */
+button,
+[role="button"],
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+select,
+summary {
+  cursor: pointer;
+}
+
+button:disabled,
+[role="button"][aria-disabled="true"],
+input[type="button"]:disabled,
+input[type="submit"]:disabled,
+input[type="reset"]:disabled,
+select:disabled {
+  cursor: not-allowed;
+}
+
+/* Utility to hide scrollbars while maintaining scroll functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ==========================================================================
+   BYTE MASCOT & UNIVERSAL LOADER ANIMATIONS
+   ========================================================================== */
+@keyframes loader-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+@keyframes byte-float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes byte-radar {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+@keyframes byte-scan {
+  0%, 100% {
+    transform: translateY(-6px);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translateY(6px);
+    opacity: 0.95;
+  }
+}
+
+@keyframes byte-sparkle-spin {
+  0% {
+    transform: rotate(0deg) scale(0.9);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.15);
+  }
+  100% {
+    transform: rotate(360deg) scale(0.9);
+  }
+}
+
+.animate-byte-float {
+  animation: byte-float 3.4s ease-in-out infinite;
+}
+
+.animate-byte-scan {
+  animation: byte-scan 2s ease-in-out infinite;
+}
+
+.animate-byte-radar {
+  animation: byte-radar 2.2s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+
+.animate-byte-sparkle {
+  animation: byte-sparkle-spin 6s linear infinite;
+}
+
+/* ==========================================================================
+   GLOBAL FOCUS HYGIENE & SEAMLESS PILL OVERLAYS
+   Eliminates harsh black native browser focus rings and maintains smooth UI
+   ========================================================================== */
+button:focus {
+  outline: none;
+}
+
+button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--card-bg, #ffffff), 0 0 0 4px var(--accent, #2563eb);
+}
+
